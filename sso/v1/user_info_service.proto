@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package sso.v1;
+
+import "sso/v1/models.proto";
+import "buf/validate/validate.proto";
+
+service UserInfoService {
+  rpc Info (InfoRequest) returns (InfoResponse);
+  rpc AddInfo (AddInfoRequest) returns (AddInfoResponse);
+  rpc UpdateInfo (UpdateInfoRequest) returns (UpdateInfoResponse);
+  rpc RemoveInfo (RemoveInfoRequest) returns (RemoveInfoResponse);
+}
+
+message InfoRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gte = 1];
+}
+
+message InfoResponse {
+  Info info = 1;
+}
+
+message AddInfoRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gte = 1];
+  Info info = 2;
+}
+
+message AddInfoResponse {
+
+}
+
+message UpdateInfoRequest {
+  int64 user_id = 1 [(buf.validate.field).int64.gte = 1];
+  Info info = 2;
+}
+
+message UpdateInfoResponse {
+
+}
+
+message RemoveInfoRequest {
+  repeated string keys = 1 [(buf.validate.field).repeated = {
+    min_items: 1,
+    items: {
+      string: {
+        min_len: 1
+      }
+    }
+  }];
+}
+
+message RemoveInfoResponse {
+
+}

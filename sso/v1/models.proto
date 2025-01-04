@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package sso.v1;
+
+import "google/protobuf/any.proto";
+import "buf/validate/validate.proto";
+
+message Tokens {
+  string access = 1;
+  string refresh = 2;
+}
+
+message Credentials {
+  string email = 1 [(buf.validate.field).string.email = true];
+  string password = 2 [(buf.validate.field).string.min_len = 8];
+}
+
+message Role {
+  int64 role_id = 1 [(buf.validate.field).int64.gte = 1];
+  string role_name = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message Info {
+  map<string, google.protobuf.Any> info = 1 [(buf.validate.field).map = {
+    min_pairs: 1,
+    keys: {
+      string: {
+        min_len: 1,
+      }
+    }
+  }];
+}
+
+message App {
+  int64 app_id = 1 [(buf.validate.field).int64.gte = 1];
+  string app_name = 2 [(buf.validate.field).string.min_len = 1];
+}

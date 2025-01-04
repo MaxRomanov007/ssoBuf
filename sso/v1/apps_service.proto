@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package sso.v1;
+
+import "sso/v1/models.proto";
+import "buf/validate/validate.proto";
+
+service AppsService {
+  rpc App (AppRequest) returns (AppResponse);
+  rpc AppByName (AppByNameRequest) returns (AppByNameResponse);
+  rpc AddApp (AddAppRequest) returns (AddAppResponse);
+  rpc RemoveApp (RemoveAppRequest) returns (RemoveAppResponse);
+  rpc Apps (AppsRequest) returns (AppsResponse);
+}
+
+message AppRequest {
+  int64 app_id = 1 [(buf.validate.field).int64.gte = 1];
+}
+
+message AppResponse {
+  App app = 1;
+}
+
+message AppByNameRequest {
+  string app_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message AppByNameResponse {
+  App app = 1;
+}
+
+message AddAppRequest {
+  App app = 1;
+}
+
+message AddAppResponse {
+  int64 app_id = 1;
+}
+
+message RemoveAppRequest {
+  int64 app_id = 1 [(buf.validate.field).int64.gte = 1];
+}
+
+message RemoveAppResponse {
+  int64 app_id = 1;
+}
+
+message AppsRequest {
+
+}
+
+message AppsResponse {
+  repeated string app_names = 1;
+}

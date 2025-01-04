@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package sso.v1;
+
+import "sso/v1/models.proto";
+import "buf/validate/validate.proto";
+
+service AuthService {
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Logout (LogoutRequest) returns (LogoutResponse);
+  rpc Access (AccessRequest) returns (AccessResponse);
+  rpc Refresh (RefreshRequest) returns (RefreshResponse);
+}
+
+message RegisterRequest {
+  Credentials credentials = 1;
+}
+
+message RegisterResponse {
+  int64 user_id = 1;
+}
+
+message LoginRequest {
+  string app_name = 1 [(buf.validate.field).string.min_len = 1];
+  Credentials credentials = 2;
+}
+
+message LoginResponse {
+  Tokens tokens = 1;
+}
+
+message LogoutRequest {
+  Tokens tokens = 1;
+}
+
+message LogoutResponse {
+  int64 user_id = 1;
+}
+
+message AccessRequest {
+  string access_token = 1;
+}
+
+message AccessResponse {
+  Tokens tokens = 1;
+}
+
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
+message RefreshResponse {
+  Tokens tokens = 1;
+}

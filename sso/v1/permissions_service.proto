@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package sso.v1;
+
+import "sso/v1/models.proto";
+import "buf/validate/validate.proto";
+
+service PermissionsService {
+  rpc Role (RoleRequest) returns (RoleResponse);
+  rpc Roles (RolesRequest) returns (RolesResponse);
+  rpc AddRole (AddRoleRequest) returns (AddRoleResponse);
+}
+
+message RoleRequest {
+  string app_name = 1 [(buf.validate.field).string.min_len = 1];
+  int64 user_id = 2 [(buf.validate.field).int64.gte = 1];
+}
+
+message RoleResponse {
+  Role role = 1;
+}
+
+message RolesRequest {
+  string app_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message RolesResponse {
+  repeated Role roles = 1;
+}
+
+message AddRoleRequest {
+  string app_name = 1 [(buf.validate.field).string.min_len = 1];
+  string role_name = 2 [(buf.validate.field).string.min_len = 1];
+}
+
+message AddRoleResponse {
+  int64 role_id = 1;
+}
