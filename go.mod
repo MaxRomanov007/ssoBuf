@@ -1,4 +1,4 @@
-module github.com/MaxRomanov007/sso/protos
+module github.com/MaxRomanov007/ssoBuf
 
 go 1.22.4
 
