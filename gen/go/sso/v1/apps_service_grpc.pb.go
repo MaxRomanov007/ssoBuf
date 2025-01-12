@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AppsService_App_FullMethodName       = "/sso.v1.AppsService/App"
-	AppsService_AppByName_FullMethodName = "/sso.v1.AppsService/AppByName"
-	AppsService_AddApp_FullMethodName    = "/sso.v1.AppsService/AddApp"
-	AppsService_RemoveApp_FullMethodName = "/sso.v1.AppsService/RemoveApp"
-	AppsService_Apps_FullMethodName      = "/sso.v1.AppsService/Apps"
+	AppsService_App_FullMethodName          = "/sso.v1.AppsService/App"
+	AppsService_AppByName_FullMethodName    = "/sso.v1.AppsService/AppByName"
+	AppsService_AddApp_FullMethodName       = "/sso.v1.AppsService/AddApp"
+	AppsService_RemoveApp_FullMethodName    = "/sso.v1.AppsService/RemoveApp"
+	AppsService_Apps_FullMethodName         = "/sso.v1.AppsService/Apps"
+	AppsService_ChangeSecret_FullMethodName = "/sso.v1.AppsService/ChangeSecret"
 )
 
 // AppsServiceClient is the client API for AppsService service.
@@ -35,6 +36,7 @@ type AppsServiceClient interface {
 	AddApp(ctx context.Context, in *AddAppRequest, opts ...grpc.CallOption) (*AddAppResponse, error)
 	RemoveApp(ctx context.Context, in *RemoveAppRequest, opts ...grpc.CallOption) (*RemoveAppResponse, error)
 	Apps(ctx context.Context, in *AppsRequest, opts ...grpc.CallOption) (*AppsResponse, error)
+	ChangeSecret(ctx context.Context, in *ChangeSecretRequest, opts ...grpc.CallOption) (*ChangeSecretResponse, error)
 }
 
 type appsServiceClient struct {
@@ -95,6 +97,16 @@ func (c *appsServiceClient) Apps(ctx context.Context, in *AppsRequest, opts ...g
 	return out, nil
 }
 
+func (c *appsServiceClient) ChangeSecret(ctx context.Context, in *ChangeSecretRequest, opts ...grpc.CallOption) (*ChangeSecretResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ChangeSecretResponse)
+	err := c.cc.Invoke(ctx, AppsService_ChangeSecret_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AppsServiceServer is the server API for AppsService service.
 // All implementations must embed UnimplementedAppsServiceServer
 // for forward compatibility.
@@ -104,6 +116,7 @@ type AppsServiceServer interface {
 	AddApp(context.Context, *AddAppRequest) (*AddAppResponse, error)
 	RemoveApp(context.Context, *RemoveAppRequest) (*RemoveAppResponse, error)
 	Apps(context.Context, *AppsRequest) (*AppsResponse, error)
+	ChangeSecret(context.Context, *ChangeSecretRequest) (*ChangeSecretResponse, error)
 	mustEmbedUnimplementedAppsServiceServer()
 }
 
@@ -128,6 +141,9 @@ func (UnimplementedAppsServiceServer) RemoveApp(context.Context, *RemoveAppReque
 }
 func (UnimplementedAppsServiceServer) Apps(context.Context, *AppsRequest) (*AppsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Apps not implemented")
+}
+func (UnimplementedAppsServiceServer) ChangeSecret(context.Context, *ChangeSecretRequest) (*ChangeSecretResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeSecret not implemented")
 }
 func (UnimplementedAppsServiceServer) mustEmbedUnimplementedAppsServiceServer() {}
 func (UnimplementedAppsServiceServer) testEmbeddedByValue()                     {}
@@ -240,6 +256,24 @@ func _AppsService_Apps_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AppsService_ChangeSecret_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeSecretRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AppsServiceServer).ChangeSecret(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AppsService_ChangeSecret_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AppsServiceServer).ChangeSecret(ctx, req.(*ChangeSecretRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AppsService_ServiceDesc is the grpc.ServiceDesc for AppsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -266,6 +300,10 @@ var AppsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Apps",
 			Handler:    _AppsService_Apps_Handler,
+		},
+		{
+			MethodName: "ChangeSecret",
+			Handler:    _AppsService_ChangeSecret_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

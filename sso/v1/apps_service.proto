@@ -11,6 +11,7 @@ service AppsService {
   rpc AddApp (AddAppRequest) returns (AddAppResponse);
   rpc RemoveApp (RemoveAppRequest) returns (RemoveAppResponse);
   rpc Apps (AppsRequest) returns (AppsResponse);
+  rpc ChangeSecret (ChangeSecretRequest) returns (ChangeSecretResponse);
 }
 
 message AppRequest {
@@ -51,4 +52,12 @@ message AppsRequest {
 
 message AppsResponse {
   repeated string app_names = 1;
+}
+
+message ChangeSecretRequest {
+  string app_name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message ChangeSecretResponse {
+
 }
